@@ -23,30 +23,24 @@ Enemy.prototype.update = function(dt) {
    }
 };
 
+function drawBox(x, y, width, height, color) {
+    ctx.beginPath();
+    ctx.rect(x, y, width, height);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = color;
+    ctx.stroke();
+}
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function(dt) {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  drawBox(this.x, this.y + 77, 100, 67, "yellow");
 };
 
 Enemy.prototype.reset = function(dt) {
-    if (this.x >= 500) {
-      this.x = 0;
-    }
-};
-
-// check if enemy collided with player
-Enemy.prototype.checkCollisions = function (dt) {
-      // check to see if "this" enemy overlaps with player
-      if (player.y + 131 >= this.y + 90 &&
-          player.x + 25 <= this.x + 88 &&
-          player.y + 73 <= this.y + 135 &&
-          player.x + 76 >= this.x + 11) {
-                // reset player
-                player.x = 202;
-                player.y = 383;
-        }
-
-      this.checkCollisions();
+  if (this.x >= 500) {
+    this.x = 0;
+  }
 };
 
 // Player class
@@ -61,6 +55,20 @@ var Player = function(x,y,speed) {
 
 // update Player position
 Player.prototype.update = function(dt) {
+  if(this.y < -1) {
+     this.reset();
+     console.log("Score!");
+   }
+   // code to prevent player from crossing boundaries
+  if(this.y > 383 ) {
+    this.y = 383;
+  }
+  if (this.x > 402.5){
+    this.x = 402.5;
+  }
+  if (this.x < 2.5){
+    this.x = 2.5;
+  }
 };
 
 // allows input keys for player movement
@@ -70,7 +78,8 @@ Player.prototype.handleInput = function() {
 
 // Draws player position
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  drawBox(this.x + 16, this.y + 63, 70, 75, "blue");
 };
 
 // Resets player position
@@ -91,6 +100,20 @@ var enemy4 = new Enemy(0,50);
 var enemy5 = new Enemy(0,210);
 
 var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
+
+// check if enemy collided with player
+function checkCollisions() {
+  for (var i = 0; i < allEnemies.length; i++) {
+      if (player.x < allEnemies[i].x + allEnemies[i].width && player.x + player.width > allEnemies[i].x  && player.y < allEnemies[i].y + allEnemies[i].height && player.y + player.height > allEnemies[i].y) {
+      player.reset();
+    }
+  }
+  this.checkCollisions();
+}
+
+// Score is indicated on the canvas
+
+// Increase in difficulty as player scores more
 
 // Input method for player keyboard movement
 Player.prototype.handleInput = function(key) {
