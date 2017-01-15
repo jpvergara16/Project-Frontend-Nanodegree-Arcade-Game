@@ -25,8 +25,8 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
+    canvas.width = 909;
+    canvas.height = 789;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -95,6 +95,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        moon.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -108,15 +109,16 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/plain-block5.png',
+                'images/plain-block5.png',
+                'images/plain-block4.png',
+                'images/plain-block3.png',
+                'images/plain-block2.png',
+                'images/plain-block1.png',
+                'images/plain-block0.png',
             ],
-            numRows = 6,
-            numCols = 5,
+            numRows = 7,
+            numCols = 9,
             row, col;
 
         /* Loop through the number of rows and columns we've defined above
@@ -135,8 +137,7 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-        renderEntities();
+      renderEntities();
     }
 
     /* This function is called by the render function and is called on each game
@@ -152,6 +153,8 @@ var Engine = (function(global) {
         });
 
         player.render();
+        moon.render();
+        star.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -168,10 +171,17 @@ var Engine = (function(global) {
      */
     Resources.load([
         'images/stone-block.png',
-        'images/water-block.png',
-        'images/grass-block.png',
-        'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/plain-block5.png',
+        'images/plain-block4.png',
+        'images/plain-block3.png',
+        'images/plain-block2.png',
+        'images/plain-block1.png',
+        'images/plain-block0.png',
+        'images/enemy-star-thief.png',
+        'images/char-princess-girl.png',
+        'images/enemy-shadow-bug.png',
+        'images/Moon.png',
+        'images/Star.png',
     ]);
     Resources.onReady(init);
 
