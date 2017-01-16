@@ -26,7 +26,7 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 909;
-    canvas.height = 789;
+    canvas.height = 706;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -137,6 +137,7 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
+      ctx.drawImage(Resources.get("images/Selector.png"), 404, 46);
       renderEntities();
     }
 
@@ -151,10 +152,12 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
         moon.render();
         star.render();
+        allRocks.forEach(function(rock) {
+          rock.render();
+        });
     }
 
     /* This function does nothing but it could have been a good place to
@@ -182,6 +185,8 @@ var Engine = (function(global) {
         'images/enemy-shadow-bug.png',
         'images/Moon.png',
         'images/Star.png',
+        'images/Rock.png',
+        'images/Selector.png',
     ]);
     Resources.onReady(init);
 

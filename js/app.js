@@ -75,9 +75,6 @@ var Player = function(x,y) {
 
 // update Player position
 Player.prototype.update = function(dt) {
-  if(this.x > 353.5 && this.x < 555.5 && this.y < 15) {
-     this.reset();
-   }
    // code to prevent player from crossing boundaries
   if(this.y > 475) {
     this.y = 475;
@@ -88,6 +85,10 @@ Player.prototype.update = function(dt) {
   if(this.x < 2.5) {
     this.x = 2.5;
   }
+  // code to stop player from passing Rocks
+  if(this.x > 353.5 && this.x < 555.5 && this.y < 15) {
+   this.reset();
+   }
 };
 
 // Draws player position
@@ -109,12 +110,12 @@ Player.prototype.reset = function() {
 var player = new Player(404, 473);
 
 // Place all enemy objects in an array called allEnemies
-var enemy1 = new Enemy(0,50);
-var enemy2 = new Enemy(0,130);
-var enemy3 = new Enemy(0,210);
-var enemy4 = new Enemy(0,50);
-var enemy5 = new Enemy(0,210);
-var enemy6 = new Enemy(0,290);
+var enemy1 = new Enemy(0,58);
+var enemy2 = new Enemy(0,141);
+var enemy3 = new Enemy(0,225);
+var enemy4 = new Enemy(0,58);
+var enemy5 = new Enemy(0,225);
+var enemy6 = new Enemy(0,308);
 
 var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6];
 
@@ -147,7 +148,7 @@ var Moon = function (x, y) {
   this.sprite = "images/Moon.png";
 };
 
-// Renders and redraws Moon position
+// Renders Moon position
 Moon.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   ctx.beginPath();
@@ -164,12 +165,12 @@ var moon = new Moon(305, -130);
 var Star = function (x, y) {
   this.x = x;
   this.y = y;
-  this.width = 500;
-  this.height = 300;
+  this.width = 60;
+  this.height = 60;
   this.sprite = "images/Star.png";
 };
 
-// Renders and redraws Moon position
+// Renders Star position
 Star.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -178,6 +179,32 @@ Star.prototype.update = function(dt) {
 };
 
 var star = new Star(505, 473);
+
+// Rock class
+var Rock = function (x, y) {
+  this.x = x;
+  this.y = y;
+  this.width = 101;
+  this.height = 83;
+  this.sprite = "images/Rock.png";
+};
+
+// Renders Star position
+Rock.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Rock.prototype.update = function(dt) {
+};
+
+var rock0 = new Rock(202, -30);
+var rock1 = new Rock(303, -30);
+var rock2 = new Rock(303, 53);
+var rock3 = new Rock(505, 53);
+var rock4 = new Rock(505, -30);
+var rock5 = new Rock(606, -30);
+
+var allRocks = [rock0, rock1, rock2, rock3, rock4, rock5];
 
 
 // This listens for key presses and sends the keys to your

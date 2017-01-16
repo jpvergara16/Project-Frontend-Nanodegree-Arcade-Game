@@ -2,12 +2,42 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>JavaScript Game: Frogger!</title>
+    <title>JavaScript Game: Attack Of The Shadow Bugs!</title>
     <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Bungee+Shade|Overpass+Mono" rel="stylesheet">
 </head>
 <body>
+  <h1>
+    Attack Of The Shadow Bugs!
+  </h1>
+  <div id = "scoreboard">
+    <span>Stars Collected: </span><span id="score">%data%</span>
+    <span>Lives: </span><span id="lives">%data%</span>
+  </div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
 </body>
+<footer>
+  <!-- Trigger/Open The Modal -->
+  <button id="howbtn">How To Play</button>
+  <!-- The Modal -->
+  <div id="howmodal" class="modal">
+  <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+         <h2>Save The Moon! Collect The Stars!</h2>
+       </div>
+      <ul>
+        <li>Use the up, down, left, and right arrow keys to move the princess</li>
+        <li>Stars have been scattered around the board and it's your job to collect all of them!</li>
+        <li>Bring all stars to the star altar! Each star will get you closer to brightening back the moon!</li>
+        <li>Collect 20 stars to win!</li>
+      </ul>
+      <span class="close">close</span>
+    </div>
+  </div>
+    <script src="js/modal.js"></script>
+</footer>
 </html>
