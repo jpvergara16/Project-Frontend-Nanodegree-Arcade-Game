@@ -94,8 +94,14 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
         moon.update();
+        player.update(dt);
+        allRocks.forEach(function(rock) {
+          rock.update(dt);
+        });
+        allStars.forEach(function(star) {
+          star.update(dt);
+        });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -150,14 +156,16 @@ var Engine = (function(global) {
          * the render function you have defined.
          */
         allEnemies.forEach(function(enemy) {
-            enemy.render();
+          enemy.render();
         });
         player.render();
-        moon.render();
-        star.render();
+        allStars.forEach(function(star) {
+          star.render();
+        });
         allRocks.forEach(function(rock) {
           rock.render();
         });
+        moon.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -180,8 +188,8 @@ var Engine = (function(global) {
         'images/plain-block2.png',
         'images/plain-block1.png',
         'images/plain-block0.png',
-        'images/enemy-star-thief.png',
         'images/char-princess-girl.png',
+        'images/char-princess-girl-star.png',
         'images/enemy-shadow-bug.png',
         'images/Moon.png',
         'images/Star.png',
