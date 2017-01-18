@@ -158,7 +158,6 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
           enemy.render();
         });
-        player.render();
         allStars.forEach(function(star) {
           star.render();
         });
@@ -166,6 +165,7 @@ var Engine = (function(global) {
           rock.render();
         });
         moon.render();
+        player.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -173,7 +173,11 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        GameOver = function() {
+          if (player.lives == 0 || player.score == 20) {
+            console.log("Game Over!")
+          }
+        }
     }
 
     /* Go ahead and load all of the images we know we're going to need to

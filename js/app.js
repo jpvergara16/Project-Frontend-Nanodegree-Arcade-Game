@@ -12,13 +12,13 @@ GameObject.prototype.render = function () {
 
 // Enemies our player must avoid
 var Enemy = function(x,y) {
-    this.x = x;
-    this.y = y;
-    this.width = 75;
-    this.height= 60;
-    this.speed = 130 + Math.floor(Math.random() * 100);
-    // The image/sprite for the enemies
-    this.sprite = 'images/enemy-shadow-bug.png';
+  this.x = x;
+  this.y = y;
+  this.width = 75;
+  this.height= 60;
+  this.speed = 101 + Math.floor(Math.random() * 150);
+  // The image/sprite for the enemies
+  this.sprite = 'images/enemy-shadow-bug.png';
 };
 
 // Draw the enemy on the screen, required method for game
@@ -32,7 +32,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x < 909){
-     this.x += this.speed * 1.3 * dt;
+     this.x += this.speed * 1.5 * dt;
    } else {
       this.x = -100;
    }
@@ -52,10 +52,63 @@ Enemy.prototype.checkCollisions = function () {
    player.x + player.width > enemy.x  &&
    player.y < enemy.y + enemy.height &&
    player.y + player.height > enemy.y) {
-   player.reset();
-   console.log("Ouch! You Got Hit!");
+     player.reset();
+     player.holdStar = false;
+     console.log("Ouch! You Got Hit!");
   }
 };
+
+// Star class
+var Star = function (x, y) {
+  var StarPos = function getRandomInt(min,max) {
+    return Math.floor(Math.random()*(max-min)+min *2);
+  };
+  this.width = 60;
+  this.height = 60;
+  this.x = 101 * StarPos(0,8);
+  this.y = 53 + (83 * StarPos(0,6));
+  this.sprite = "images/Star.png";
+};
+
+Star.prototype = Object.create(GameObject.prototype);
+Star.prototype.constructor = Star;
+
+Star.prototype.starCollisions = function () {
+  var star = this;
+  if (player.x < star.x + star.width &&
+   player.x + player.width > star.x  &&
+   player.y < star.y + star.height &&
+   player.y + player.height > star.y){
+    player.sprite = "images/char-princess-girl-star.png";
+    player.holdStar = true;
+    star.x = -300;
+    star.y = -300;
+  }
+};
+
+Star.prototype.reset = function() {
+  this.x = StarPos();
+  this.y = StarPos();
+};
+
+Star.prototype.update = function(dt) {
+  // rules to prevent star from overlapping with other Game Objects and crossing boundaries
+  this.x < 909;
+  this.y < 475;
+  if (((this.x > 202 && this.x < 606) && this.y < 60) && ((this.x = 404 && this.y == 473))) {
+    this.reset();
+  }
+
+  this.starCollisions();
+};
+
+var star0 = new Star();
+var star1 = new Star();
+var star2 = new Star();
+var star3 = new Star();
+var star4 = new Star();
+
+allStars = [star0, star1, star2, star3, star4];
 
 // Player class
 var Player = function(x,y) {
@@ -67,6 +120,7 @@ var Player = function(x,y) {
   this.sprite = 'images/char-princess-girl.png';
   this.score = 0;
   this.lives = 5;
+  this.holdStar = false;
 };
 
 Player.prototype = Object.create(GameObject.prototype);
@@ -77,22 +131,26 @@ Player.prototype.update = function(dt) {
   document.getElementById('lives').innerHTML = player.lives;
   document.getElementById('score').innerHTML = player.score;
   // Update score of the player and reset player position
-  if(this.x === 404 && this.y === 53) {
-    this.score++;
+  if((this.x === 404 && this.y < 73)  && (this.sprite = "images/char-princess-girl-star.png")) {
+    this.score ++;
+    this.reset();
+    this.sprite = "images/char-princess-girl.png";
     document.getElementById('score').innerHTML = this.score;
+    console.log("Star Collected!");
   }
 };
 
 // Resets player position
 Player.prototype.reset = function() {
-  if (this.lives > 0) {
+  if (this.lives > 0 && this.holdStar === false) {
     this.lives--;
-    document.getElementById('lives').innerHTML = this.lives;
+  } else if (this.lives > 0 && this.holdStar === true) {
+    this.sprite = "images/char-princess-girl.png";
   }
   this.x = 404;
   this.y = 473;
 };
-// Now instantiate your objects
+
 
 // Place the player object in a variable called player
 var player = new Player(404, 473);
@@ -150,56 +208,30 @@ Moon.prototype = Object.create(GameObject.prototype);
 Moon.prototype.constructor = Moon;
 
 Moon.prototype.update = function(dt) {
+  switch (Player.score) {
+    case "First Brightness":
+      if (Player.score >= 5) {
+        Moon.sprite = "images/Moon1.png";
+      }
+      console.log("The Moon is brighter!")
+      break;
+
+    case "Second Brightness":
+    if (Player.score >= 12) {
+      Moon.sprite = "images/Moon2.png";
+      console.log("Wow look at that! The Moon almost fully lit!")
+    }
+    break;
+    case "Final Brightness":
+    if (Player.score >= 20) {
+      Moon.sprite = "images/Moon3.png";
+      console.log("The Moon is restored!")
+    }
+    break;
+  }
 };
 
 var moon = new Moon(305, -130);
-
-// Star class
-var Star = function (x, y) {
-  var StarPos = function getRandomInt(min,max) {
-    return Math.floor(Math.random()*(max-min)+min *2);
-  }
-  this.width = 60;
-  this.height = 60;
-  this.x = 101 * StarPos(0,7);
-  this.y = 53 + (83 * StarPos(0,5));
-  this.sprite = "images/Star.png";
-};
-
-Star.prototype = Object.create(GameObject.prototype);
-Star.prototype.constructor = Star;
-
-
-Star.prototype.reset = function() {
-  this.x = StarPos(0,909);
-  this.y = StarPos(53,473);
-};
-
-Star.prototype.update = function(dt) {
-  // rules to prevent star from overlapping with other Game Objects and crossing boundaries
-  this.x < 909;
-  this.y < 475;
-
-  this.starCollisions();
-};
-
-Star.prototype.starCollisions = function () {
-  var star = this;
-  if (player.x < star.x + star.width &&
-   player.x + star.width > star.x  &&
-   player.y < star.y + star.height &&
-   player.y + star.height > star.y) {
-    player.sprite.replace('images/char-princess-girl.png',"images/char-princess-girl-star.png");
-  }
-};
-
-var star0 = new Star();
-var star1 = new Star();
-var star2 = new Star();
-var star3 = new Star();
-var star4 = new Star();
-
-allStars = [star0, star1, star2, star3, star4];
 
 // Rock class
 var Rock = function (x, y) {
