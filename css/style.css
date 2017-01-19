@@ -12,9 +12,15 @@ h2,
 
 #scoreboard,
 button,
-li {
+li,
+p {
   font-family: Overpass Mono;
   color: white;
+}
+
+p {
+  font-style: italic;
+  font-weight: bolder;
 }
 
 .modal {

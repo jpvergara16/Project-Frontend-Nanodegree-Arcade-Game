@@ -1,3 +1,7 @@
+// Global sprite variables to remove code repetition
+var playerMain = "images/char-princess-girl.png";
+var playerStar = "images/char-princess-girl-star.png";
+
 //Superclass for Game Objects
 var GameObject = function (x,y) {
   this.x = x;
@@ -17,7 +21,6 @@ var Enemy = function(x,y) {
   this.width = 75;
   this.height= 60;
   this.speed = 101 + Math.floor(Math.random() * 150);
-  // The image/sprite for the enemies
   this.sprite = 'images/enemy-shadow-bug.png';
 };
 
@@ -60,69 +63,110 @@ Enemy.prototype.checkCollisions = function () {
 
 // Star class
 var Star = function (x, y) {
+  // Generates random integer
   var StarPos = function getRandomInt(min,max) {
     return Math.floor(Math.random()*(max-min)+min *2);
   };
+  this.x = 101 * StarPos(0,9);
+  this.y = 53 + (83 * StarPos(0,6));
   this.width = 60;
   this.height = 60;
-  this.x = 101 * StarPos(0,8);
-  this.y = 53 + (83 * StarPos(0,6));
+  // sets x & y value for star to be multiple of the blocks x & y value
   this.sprite = "images/Star.png";
+  // Code to set offCanvas value for stars once called
+  var offCan = false;
+  this.offCanvas = function (x,y) {
+    this.x = -300;
+    this.y = -300;
+    offCan = true;
+  };
 };
 
 Star.prototype = Object.create(GameObject.prototype);
 Star.prototype.constructor = Star;
 
+Star.prototype.reset = function() {
+};
+
+Star.prototype.update = function(dt) {
+  // rule to prevent star from crossing boundaries
+  this.x < 909;
+  this.y < 475;
+  // rule to prevent star from overlapping with Rocks & Moon
+  if ((this.x > 202 && this.x < 606) && this.y < 60) {
+    this.reset();
+  }
+  // call collision if player holds nothing
+  if (player.holdStar === false) {
+    this.starCollisions();
+  }
+};
+
+// Collision function to acquire Star
 Star.prototype.starCollisions = function () {
   var star = this;
   if (player.x < star.x + star.width &&
    player.x + player.width > star.x  &&
    player.y < star.y + star.height &&
-   player.y + player.height > star.y){
-    player.sprite = "images/char-princess-girl-star.png";
+   player.y + player.height > star.y) {
+    player.sprite = playerStar;
     player.holdStar = true;
-    star.x = -300;
-    star.y = -300;
+    this.offCanvas();
+    console.log("A star has been collected! Bring it to the altar!");
   }
 };
 
-Star.prototype.reset = function() {
-  this.x = StarPos();
-  this.y = StarPos();
-};
-
-Star.prototype.update = function(dt) {
-  // rules to prevent star from overlapping with other Game Objects and crossing boundaries
-  this.x < 909;
-  this.y < 475;
-  if (((this.x > 202 && this.x < 606) && this.y < 60) && ((this.x = 404 && this.y == 473))) {
-    this.reset();
-  }
-
-  this.starCollisions();
-};
-
+//Placement of Random Stars
 var star0 = new Star();
 var star1 = new Star();
 var star2 = new Star();
 var star3 = new Star();
 var star4 = new Star();
-
 allStars = [star0, star1, star2, star3, star4];
 
-// Player class
+// Rock class
+var Rock = function (x, y) {
+  this.x = x;
+  this.y = y;
+  this.width = 101;
+  this.height = 83;
+  this.sprite = "images/Rock.png";
+};
+
+// Rock object constructor
+Rock.prototype = Object.create(GameObject.prototype);
+Rock.prototype.constructor = Rock;
+
+Rock.prototype.update = function(dt) {
+};
+
+var rock0 = new Rock(202, -33);
+var rock1 = new Rock(303, -33);
+var rock2 = new Rock(303, 53);
+var rock3 = new Rock(505, 53);
+var rock4 = new Rock(505, -33);
+var rock5 = new Rock(606, -33);
+var rock6 = new Rock(404, -33);
+
+var allRocks = [rock0, rock1, rock2, rock3, rock4, rock5, rock6];
+
+
+// Player subclass
 var Player = function(x,y) {
   this.x = x;
   this.y = y;
   this.width = 45;
   this.height = 60;
-  // The image/sprite for the player
-  this.sprite = 'images/char-princess-girl.png';
+  //Array to help record last known player position
+  this.playerPosition = [];
+
+  this.sprite = playerMain;
   this.score = 0;
   this.lives = 5;
   this.holdStar = false;
 };
 
+// Player object constructor
 Player.prototype = Object.create(GameObject.prototype);
 Player.prototype.constructor = Player;
 
@@ -131,12 +175,22 @@ Player.prototype.update = function(dt) {
   document.getElementById('lives').innerHTML = player.lives;
   document.getElementById('score').innerHTML = player.score;
   // Update score of the player and reset player position
-  if((this.x === 404 && this.y < 73)  && (this.sprite = "images/char-princess-girl-star.png")) {
+  if((this.x === 404 && this.y < 73)  && (this.sprite = playerStar)) {
     this.score ++;
     this.reset();
-    this.sprite = "images/char-princess-girl.png";
-    document.getElementById('score').innerHTML = this.score;
-    console.log("Star Collected!");
+    this.holdStar = false;
+    this.sprite = playerMain;
+    console.log("A star has been restored!");
+  }
+
+  for (i = 0; i < allRocks.length; i++) {
+    if (this.x < allRocks[i].x + allRocks[i].width &&
+      this.x + this.width > allRocks[i].x &&
+      this.y < allRocks[i].y + allRocks[i].height &&
+      this.y + this.height > allRocks[i].y) {
+        this.x = this.playerPosition[this.playerPosition.length-1][0];
+        this.y = this.playerPosition[this.playerPosition.length-1][1];
+    }
   }
 };
 
@@ -145,12 +199,11 @@ Player.prototype.reset = function() {
   if (this.lives > 0 && this.holdStar === false) {
     this.lives--;
   } else if (this.lives > 0 && this.holdStar === true) {
-    this.sprite = "images/char-princess-girl.png";
+    this.sprite = playerMain;
   }
   this.x = 404;
   this.y = 473;
 };
-
 
 // Place the player object in a variable called player
 var player = new Player(404, 473);
@@ -172,21 +225,26 @@ Player.prototype.handleInput = function(key) {
   switch (key) {
     case "right":
       if (this.x < 800) {
+        //Records last known [x,y] value for playerPosition
+        this.playerPosition.push ([this.x, this.y]);
         this.x += 101;
       }
       break;
     case "left":
       if (this.x > 0) {
+        this.playerPosition.push ([this.x, this.y]);
         this.x -= 101;
       }
       break;
     case "up":
       if (this.y> 0) {
+        this.playerPosition.push ([this.x, this.y]);
         this.y -= 83;
       }
       break;
     case "down":
       if (this.y < 473) {
+        this.playerPosition.push ([this.x, this.y]);
         this.y += 83;
       }
       break;
@@ -208,56 +266,25 @@ Moon.prototype = Object.create(GameObject.prototype);
 Moon.prototype.constructor = Moon;
 
 Moon.prototype.update = function(dt) {
-  switch (Player.score) {
-    case "First Brightness":
-      if (Player.score >= 5) {
-        Moon.sprite = "images/Moon1.png";
-      }
-      console.log("The Moon is brighter!")
+  var logged = false;
+  switch (player.score) {
+    case 5: case 6: case 7: case 8: case 9: case 10: case 11:
+      this.sprite = "images/Moon1.png";
+      console.log("The Moon is brighter!");
       break;
 
-    case "Second Brightness":
-    if (Player.score >= 12) {
-      Moon.sprite = "images/Moon2.png";
-      console.log("Wow look at that! The Moon almost fully lit!")
-    }
+    case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19:
+      this.sprite = "images/Moon2.png";
+      console.log("Wow look at that! The Moon almost fully lit!");
     break;
-    case "Final Brightness":
-    if (Player.score >= 20) {
-      Moon.sprite = "images/Moon3.png";
-      console.log("The Moon is restored!")
-    }
+    case 20:
+      this.sprite = "images/Moon3.png";
+      console.log("The Moon is restored!");
     break;
   }
 };
 
 var moon = new Moon(305, -130);
-
-// Rock class
-var Rock = function (x, y) {
-  this.x = x;
-  this.y = y;
-  this.width = 101;
-  this.height = 83;
-  this.sprite = "images/Rock.png";
-};
-
-// Renders Star position
-Rock.prototype = Object.create(GameObject.prototype);
-Rock.prototype.constructor = Rock;
-
-Rock.prototype.update = function(dt) {
-};
-
-var rock0 = new Rock(202, -33);
-var rock1 = new Rock(303, -33);
-var rock2 = new Rock(303, 53);
-var rock3 = new Rock(505, 53);
-var rock4 = new Rock(505, -33);
-var rock5 = new Rock(606, -33);
-
-var allRocks = [rock0, rock1, rock2, rock3, rock4, rock5];
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

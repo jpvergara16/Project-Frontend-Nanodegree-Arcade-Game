@@ -26,7 +26,7 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 909;
-    canvas.height = 706;
+    canvas.height = 700;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -173,11 +173,12 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        GameOver = function() {
-          if (player.lives == 0 || player.score == 20) {
+        var GameOver = function() {
+          if (player.lives === 0 || player.score === 20) {
             console.log("Game Over!")
           }
         }
+        GameOver();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -196,6 +197,9 @@ var Engine = (function(global) {
         'images/char-princess-girl-star.png',
         'images/enemy-shadow-bug.png',
         'images/Moon.png',
+        'images/Moon1.png',
+        'images/Moon2.png',
+        'images/Moon3.png',
         'images/Star.png',
         'images/Rock.png',
         'images/Selector.png',
