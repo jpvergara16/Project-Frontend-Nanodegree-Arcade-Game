@@ -1,11 +1,8 @@
 // Global sprite variables to remove code repetition
-var playerMain = "images/char-princess-girl.png";
-var playerStar = "images/char-princess-girl-star.png";
-
-// Function for a random even integer
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min) + min * 2);
-}
+var PLAYER_MAIN = "images/char-princess-girl.png", //player sprite
+    PLAYER_STAR = "images/char-princess-girl-star.png", // player sprite holding star
+    TILE_WIDTH = 101,
+    TILE_HEIGHT = 83;
 
 //Superclass for Game Objects
 var GameObject = function(x, y) {
@@ -21,11 +18,19 @@ GameObject.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min) + min * 2);
+};
+
 // Star class
 var Star = function(x, y) {
+    // Star method for generating random even integer
+    this.getRandomInt = function(min, max) {
+        return Math.floor(Math.random() * (max - min) + min * 2);
+    };
     // sets random x, y value for star
-    this.x = 101 * getRandomInt(0, 9);
-    this.y = 53 + (83 * getRandomInt(0, 6));
+    this.x = TILE_WIDTH * this.getRandomInt(0, 9);
+    this.y = 53 + (TILE_HEIGHT * this.getRandomInt(0, 6));
     this.width = 60;
     this.height = 60;
     this.sprite = "images/Star.png";
@@ -42,8 +47,8 @@ Star.prototype = Object.create(GameObject.prototype);
 Star.prototype.constructor = Star;
 
 Star.prototype.reset = function() {
-    this.x = 101 * getRandomInt(0, 9);
-    this.y = 53 + (83 * getRandomInt(0, 6));
+    this.x = TILE_WIDTH * this.getRandomInt(0, 9);
+    this.y = 53 + (TILE_HEIGHT * this.getRandomInt(0, 6));
     offCan = false;
 };
 
@@ -55,7 +60,7 @@ Star.prototype.starCollisions = function() {
         player.y < star.y + star.height &&
         player.y + player.height > star.y) {
         // changes player sprite to player holding a star
-        player.sprite = playerStar;
+        player.sprite = PLAYER_STAR;
         player.holdStar = true;
         this.offCanvas();
         console.log("A star has been collected! Bring it to the altar!");
@@ -73,11 +78,9 @@ Star.prototype.update = function(dt) {
     }
     // RESETS STAR POSITIONS ONCE ALL STARS ARE OFF CANVAS
     if ((star0.x === star0.y) && (star1.x === star1.y) && (star2.x === star2.y) && (star3.x === star3.y) && (star4.x === star4.y) && (offCan = true)) {
-        star0.reset();
-        star1.reset();
-        star2.reset();
-        star3.reset();
-        star4.reset();
+        for (var i = 0; i < allStars.length; i++) {
+            allStars[i].reset();
+        }
     }
 };
 
@@ -94,8 +97,8 @@ allStars = [star0, star1, star2, star3, star4];
 var Rock = function(x, y) {
     this.x = x;
     this.y = y;
-    this.width = 101;
-    this.height = 83;
+    this.width = TILE_WIDTH;
+    this.height = TILE_HEIGHT;
     this.sprite = "images/Rock.png";
 };
 
@@ -121,7 +124,7 @@ var Enemy = function(x, y) {
     this.y = y;
     this.width = 75;
     this.height = 60;
-    this.speed = 101 + Math.floor(Math.random() * 150);
+    this.speed = TILE_WIDTH + Math.floor(Math.random() * 150);
     this.sprite = 'images/enemy-shadow-bug.png';
 };
 
@@ -183,7 +186,7 @@ var Player = function(x, y) {
     this.height = 60;
     //Array to help record last known player position
     this.playerPosition = [];
-    this.sprite = playerMain;
+    this.sprite = PLAYER_MAIN
     this.score = 0;
     this.lives = 5;
     this.holdStar = false;
@@ -195,14 +198,14 @@ Player.prototype.constructor = Player;
 
 // update Player position
 Player.prototype.update = function(dt) {
-    document.getElementById('lives').innerHTML = player.lives;
-    document.getElementById('score').innerHTML = player.score;
+    document.getElementById('lives').innerHTML = this.lives;
+    document.getElementById('score').innerHTML = this.score;
     // Update score of the player and reset player position
     if ((this.x === 404 && this.y < 73) && (this.holdStar = true)) {
         this.score++;
         this.reset();
         this.holdStar = false;
-        this.sprite = playerMain;
+        this.sprite = PLAYER_MAIN
         console.log("A star has been restored!");
     }
     // Prevents player from crossing Rocks
@@ -222,7 +225,7 @@ Player.prototype.reset = function() {
     if (this.lives > 0 && this.holdStar === false) {
         this.lives--;
     } else if (this.lives > 0 && this.holdStar === true) {
-        this.sprite = playerMain;
+        this.sprite = PLAYER_MAIN
     }
     this.x = 404;
     this.y = 473;
@@ -250,25 +253,25 @@ Player.prototype.handleInput = function(key) {
             if (this.x < 800) {
                 //Records last known [x,y] value for playerPosition
                 this.playerPosition.push([this.x, this.y]);
-                this.x += 101;
+                this.x += TILE_WIDTH;
             }
             break;
         case "left":
             if (this.x > 0) {
                 this.playerPosition.push([this.x, this.y]);
-                this.x -= 101;
+                this.x -= TILE_WIDTH;
             }
             break;
         case "up":
             if (this.y > 0) {
                 this.playerPosition.push([this.x, this.y]);
-                this.y -= 83;
+                this.y -= TILE_HEIGHT;
             }
             break;
         case "down":
             if (this.y < 473) {
                 this.playerPosition.push([this.x, this.y]);
-                this.y += 83;
+                this.y += TILE_HEIGHT;
             }
             break;
         default:
