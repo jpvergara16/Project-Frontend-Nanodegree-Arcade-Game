@@ -13,7 +13,6 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -26,7 +25,7 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 909;
-    canvas.height = 700;
+    canvas.height = 665;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -97,10 +96,10 @@ var Engine = (function(global) {
         moon.update();
         player.update(dt);
         allRocks.forEach(function(rock) {
-          rock.update(dt);
+            rock.update(dt);
         });
         allStars.forEach(function(star) {
-          star.update(dt);
+            star.update(dt);
         });
     }
 
@@ -114,6 +113,19 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
+        var addItems = [
+                'images/Rock.png',
+                'images/space-wave.png',
+            ],
+            numRows = 1,
+            numCols = 9,
+            row, col;
+        for (row = 0; row < numRows; row++) {
+            for (col = 0; col < numCols; col++) {
+                ctx.drawImage(Resources.get(addItems[1]), col * 101, -83 + row * 83);
+                ctx.drawImage(Resources.get(addItems[0]), col * 101, -110 + row * 83);
+            }
+        }
         var rowImages = [
                 'images/plain-block5.png',
                 'images/plain-block5.png',
@@ -143,9 +155,36 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-      ctx.drawImage(Resources.get("images/Selector.png"), 404, 46);
-      renderEntities();
+        ctx.drawImage(Resources.get("images/Selector.png"), 404, 46);
+        if (player.lives === 0) {
+            renderGameOver();
+        } else if (player.score === 20 && player.lives > 0) {
+            renderGameWon();
+        } else {
+            renderEntities();
+        };
     }
+    // Renders Game Over screen
+    function renderGameOver() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "3em Overpass Mono";
+        ctx.fillStyle = '#e23f42';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText("GAME OVER", 454.5, 232.5);
+        ctx.fillText("Start A New Game Below", 454.5, 332.5);
+    };
+
+    // Renders Game Won screen
+    function renderGameWon() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "3em Overpass Mono";
+        ctx.fillStyle = 'yellow';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText("Congralutions!", 454.5, 232.5);
+        ctx.fillText("You Saved The Moon!", 454.5, 332.5);
+    };
 
     /* This function is called by the render function and is called on each game
      * tick. Its purpose is to then call the render functions you have defined
@@ -156,13 +195,13 @@ var Engine = (function(global) {
          * the render function you have defined.
          */
         allEnemies.forEach(function(enemy) {
-          enemy.render();
-        });
-        allStars.forEach(function(star) {
-          star.render();
+            enemy.render();
         });
         allRocks.forEach(function(rock) {
-          rock.render();
+            rock.render();
+        });
+        allStars.forEach(function(star) {
+            star.render();
         });
         moon.render();
         player.render();
@@ -173,12 +212,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        var GameOver = function() {
-          if (player.lives === 0 || player.score === 20) {
-            console.log("Game Over!")
-          }
-        }
-        GameOver();
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -186,7 +220,7 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        'images/stone-block.png',
+        'images/space-wave.png',
         'images/plain-block5.png',
         'images/plain-block4.png',
         'images/plain-block3.png',

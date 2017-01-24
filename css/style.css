@@ -3,11 +3,25 @@ body {
   background-image: url("http://ak.picdn.net/shutterstock/videos/1952671/thumb/1.jpg");
 }
 
+.container {
+  max-width: 1010px;
+}
+
 h1,
 h2,
 .close {
   font-family: Bungee Shade, sans-serif;
-  color: white;
+  color: #ffe13d;
+}
+
+.scr,
+.liv {
+  display: inline-flex;
+}
+
+canvas {
+  border: 20px solid #ffe13d;
+  border-radius: 45px;
 }
 
 #scoreboard,
@@ -93,4 +107,8 @@ button:hover {
 button:active {
   text-decoration: none;
   border: none;
+}
+
+footer {
+  margin: 10px;
 }

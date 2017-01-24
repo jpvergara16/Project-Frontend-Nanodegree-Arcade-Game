@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>JavaScript Game: Attack Of The Shadow Bugs!</title>
@@ -7,43 +8,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Bungee+Shade|Overpass+Mono" rel="stylesheet">
 </head>
+
 <body>
-  <h1 class="game-title">
-    Attack Of The Shadow Bugs!
-  </h1>
-  <div id = "scoreboard">
-    <h3>Stars Collected:&nbsp<span id="score"></span></h3>
-    <h3>&nbsp Lives: &nbsp<span id="lives"></span></h3>
-  </div>
+    <h1 class="game-title">
+        Attack Of The Shadow Bugs!
+    </h1>
+    <div id="scoreboard">
+        <div class="scr">
+            <h3>Stars Collected:&nbsp&nbsp<span id="score"></span></h3>
+        </div>
+        <div class="liv">
+            <h3>&nbsp Lives: &nbsp<span id="lives"></span></h3>
+        </div>
+    </div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
 </body>
 <footer>
-  <!-- Trigger/Open The Modal -->
-  <button id="howbtn">How To Play</button>
-  <!-- The Modal -->
-  <div id="howmodal" class="modal">
-  <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
-         <h2>Save The Moon! Collect The Stars!</h2>
-       </div>
-      <ul>
-        <p>
-          "You are the guardian of the moon, and the stars power the light within. The shadow bugs have risen to steal that power."
-        </p>
-        <hr>
-        <li>Use the up, down, left, and right arrow keys to move the princess</li>
-        <li>Stars have been scattered around the board and it's your job to collect all of them!</li>
-        <li>Shadow Bugs will steal your lives! But when you hold a star, they will steal that instead. Don't let that happen!
-        <li>Bring all stars to the star altar! Each star will get you closer to brightening the moon!</li>
+    <!-- Start A New Game -->
+    <button class="btn" id="start-btn">Start A New Game</button>
+    <!-- Trigger/Open The Modal -->
+    <button class="btn" id="how-btn">How To Play</button>
+    <!-- The Modal -->
+    <div id="how-modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Save The Moon! Collect The Stars!</h2>
+            </div>
+            <ul>
+                <p>
+                    "You are the guardian of the moon, and the stars power the light within. The shadow bugs have risen to steal that power."
+                </p>
+                <hr>
+                <li>Use the up, down, left, and right arrow keys to move the princess</li>
+                <li>Stars have been scattered around the board and it's your job to collect all of them!</li>
+                <li>Shadow Bugs will steal a life, but when you hold a star, they will steal that instead. Don't let that happen!
+                    <li>Bring all stars to the star altar! Each star will get you closer to brightening the moon!</li>
 
-        <li>Collect 20 stars to win!</li>
-      </ul>
-      <span class="close">close</span>
+                    <li>Collect 20 stars to win!</li>
+            </ul>
+            <span class="close">close</span>
+        </div>
     </div>
-  </div>
-    <script src="js/modal.js"></script>
+    <script>
+        // Get the modal
+        var modal = document.getElementById('how-modal');
+        // Get the button that opens the modal
+        var btn = document.getElementById("how-btn");
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        // Get the button to start new game
+        var start = document.getElementById("start-btn");
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        // reloads page on click
+        start.onclick = function() {
+            location.reload();
+        }
+    </script>
 </footer>
+
 </html>
