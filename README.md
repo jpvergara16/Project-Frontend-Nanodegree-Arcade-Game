@@ -9,5 +9,5 @@ Game Instructions:
 - Bring all stars to the star altar! Each star will get you closer to brightening the moon!
 - Collect 20 stars to win!
 
-Click the link to play the [Arcade Game](https://jpvergara16.github.io/Project-Frontend-Nanodegree-Arcade-Game/)
+Click the link to play the [Arcade Game](https://jpvergara16.github.io/Project-Nanodegree-Arcade-Game/)
 
